@@ -1,0 +1,11 @@
+name: asn1dart
+description: Generic ASN.1 decoder.
+version: 0.1.0
+
+environment:
+  sdk: '>=2.12.0 <3.0.0'
+
+dev_dependencies:
+  pedantic: ^1.9.0
+  test: ^1.14.4
+  format: ^1.0.1-nullsafety.0
