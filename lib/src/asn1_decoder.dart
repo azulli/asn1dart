@@ -35,17 +35,19 @@ class ASN1Decoder extends Converter<Uint8List, ASN1Object?> {
     List<ASN1Object>? childs;
     if (tag.isConstructed) {
       childs = <ASN1Object>[];
-      computedLength = _decodeChilds(input, childs, elementLength);
+      computedLength =
+          _decodeChilds(input, childs, asn1BodyStart, elementLength);
     } else if (tag.isUniversal &&
         (tag.tagNumber == TagNumber.BIT_STRING ||
             tag.tagNumber == TagNumber.OCTET_STRING)) {
       try {
-        if (tag.tagNumber == TagNumber.BIT_STRING && input[_pos] != 0) {
+        if (tag.tagNumber == TagNumber.BIT_STRING && input[_pos++] != 0) {
           throw StateError('BIT STRING with unused bits cannot encapsulate.');
         }
         childs = <ASN1Object>[];
         // Gets the length of the decoded data, when the element length is unlimited
-        computedLength = _decodeChilds(input, childs, elementLength);
+        computedLength =
+            _decodeChilds(input, childs, asn1BodyStart, elementLength);
         // The EOC element signals the end of the element content and must not be returned
         if (childs.any((element) => element.tag?.isEOC ?? false)) {
           throw Exception('EOC is not supposed to be actual content.');
@@ -84,8 +86,9 @@ class ASN1Decoder extends Converter<Uint8List, ASN1Object?> {
   ///
   /// [len] is the element length parsed from the ASN.1 header, [childs] will
   /// contains all found ASN.1 elements.
-  int _decodeChilds(Uint8List input, List<ASN1Object> childs, int? len) {
-    final start = _pos;
+  int _decodeChilds(
+      Uint8List input, List<ASN1Object> childs, final int start, int? len) {
+    // final start = _pos;
     var decodedLength = len ?? 0;
     if (len != null) {
       // Here we process the childs of a known length ASN.1 parent.

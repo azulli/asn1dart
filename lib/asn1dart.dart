@@ -13,3 +13,4 @@ export 'src/asn1object.dart';
 export 'src/asn1tag.dart';
 export 'src/impl/base_objects.dart';
 export 'src/impl/string_objects.dart';
+export 'src/asn1_oids.dart';
