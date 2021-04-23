@@ -1,3 +1,17 @@
+// ASN.1 Dart decoder Copyright (c) 2021-2022 A. Zulli
+//
+// Permission to use, copy, modify, and/or distribute this software for any
+// purpose with or without fee is hereby granted, provided that the above
+// copyright notice and this permission notice appear in all copies.
+//
+// THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+// WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+// MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+// ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+// WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+// ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+// OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -84,8 +98,10 @@ class ASN1Decoder extends Converter<Uint8List, ASN1Object?> {
 
   /// Decodes the child ASN.1 elements, returning the calculated data length.
   ///
-  /// [len] is the element length parsed from the ASN.1 header, [childs] will
-  /// contains all found ASN.1 elements.
+  /// [start] is the starting position into the source stream from which begin
+  /// the decoding procedure, whilst [len] is the element length parsed from
+  /// the ASN.1 header, [childs] will contains all found ASN.1 elements.
+  /// The length of the encoded child list will be returned as result.
   int _decodeChilds(
       Uint8List input, List<ASN1Object> childs, final int start, int? len) {
     // final start = _pos;
@@ -121,7 +137,7 @@ class ASN1Decoder extends Converter<Uint8List, ASN1Object?> {
     return decodedLength;
   }
 
-  /// Parses an ASN.1 tag element
+  /// Parses an ASN.1 tag element.
   ASN1Tag _parseASN1Tag(Uint8List input) {
     var buf = input[_pos++];
     final tagClass = buf >> 6;
@@ -138,7 +154,7 @@ class ASN1Decoder extends Converter<Uint8List, ASN1Object?> {
     return ASN1Tag(tagClass, tagNumber, tagConstructed);
   }
 
-  /// Decodes the ASN.1 element length
+  /// Decodes the ASN.1 element length.
   int? _decodeASN1Length(Uint8List input) {
     var buf = input[_pos++];
     var len = buf & 0x7F;
