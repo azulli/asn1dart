@@ -17,7 +17,7 @@ import 'package:asn1dart/asn1dart.dart';
 main() {
   final source = File('asn1_ber_encoded.txt').readAsBytesSync();
   final decoder = ASN1Decoder();
-  final ASN1Object asn1 = decoder.covert(source);
+  final ASN1Object asn1 = decoder.convert(source);
 }
 ```
 
